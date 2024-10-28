@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Signup</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100 flex items-center justify-center min-h-screen p-5">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm transition-transform duration-200 hover:scale-105">
+      <h1 class="text-2xl font-semibold text-center text-gray-800 mb-6">Signup</h1>
+      <form id="signup-form" class="space-y-4">
+        <div class="flex items-center space-x-2">
+          <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+          </svg>
+          <input type="text" id="name" placeholder="Name" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" />
+        </div>
+        <div class="flex items-center space-x-2">
+          <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
+          </svg>
+          <input type="text" id="class" placeholder="Class" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" />
+        </div>
+        <div class="flex items-center space-x-2">
+          <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 17l4-4-4-4m5 4h3"></path>
+          </svg>
+          <input type="number" id="age" placeholder="Age" required min="1" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" />
+        </div>
+        <div class="flex items-center space-x-2">
+          <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 21v-2a4 4 0 00-8 0v2"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11a4 4 0 110-8 4 4 0 010 8z"></path>
+          </svg>
+          <input type="email" id="email" placeholder="Email (name@akm.dev)" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" />
+        </div>
+        <div class="flex items-center space-x-2">
+          <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0-1.1.9-2 2-2s2 .9 2 2a4 4 0 11-8 0c0-1.1.9-2 2-2s2 .9 2 2z"></path>
+          </svg>
+          <input type="password" id="password" placeholder="Password" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" />
+        </div>
+        <div class="flex items-center space-x-2">
+          <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232a2 2 0 00-2.465.933l-1.5 3a2 2 0 01-1.732 1.065H5a2 2 0 100 4h1.732a2 2 0 011.732 1.065l1.5 3a2 2 0 002.465.933A2 2 0 0017 18v-8a2 2 0 00-1.768-1.768z"></path>
+          </svg>
+          <input type="file" id="profilePhoto" accept="image/*" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" />
+        </div>
+        <button type="submit" class="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 rounded-md transition duration-300 ease-in-out transform hover:scale-105">Sign Up</button>
+      </form>
+      <p id="error-message" class="text-red-500 text-center mt-4"></p>
+    </div>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
+      import {
+        getAuth,
+        createUserWithEmailAndPassword,
+      } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-auth.js";
+      import {
+        getDatabase,
+        ref,
+        set,
+      } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-database.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyANFP_rkQbTajt3eChtbq4AOSNhduRHVHc",
+        authDomain: "smc-godda-25ec0.firebaseapp.com",
+        databaseURL: "https://smc-godda-25ec0-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "smc-godda-25ec0",
+        storageBucket: "smc-godda-25ec0.appspot.com",
+        messagingSenderId: "952429152528",
+        appId: "1:952429152528:web:1a5a41a08ebb672c3c3d95",
+        measurementId: "G-8J2T5WBEPK",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const database = getDatabase(app);
+
+      document.getElementById("signup-form").addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const currentTime = new Date();
+        const currentHour = currentTime.getHours();
+        const currentMinutes = currentTime.getMinutes();
+
+        // Check if the time is between 8:00 AM and 10:30 AM
+        if ((currentHour < 8) || (currentHour > 10) || (currentHour === 10 && currentMinutes > 30)) {
+          document.getElementById("error-message").innerText = "Signup is only available between 8:00 AM and 10:30 AM.";
+          return;
+        }
+
+        const name = document.getElementById("name").value;
+        const userClass = document.getElementById("class").value;
+        const age = document.getElementById("age").value;
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        const emailRegex = /^[a-zA-Z0-9]+@akm\.dev$/;
+
+        if (!emailRegex.test(email)) {
+          document.getElementById("error-message").innerText = "Invalid email format. Use username@akm.dev.";
+          return;
+        }
+
+        createUserWithEmailAndPassword(auth, email, password)
+          .then((userCredential) => {
+            const user = userCredential.user;
+            const userId = user.uid;
+            const profilePhoto = document.getElementById("profilePhoto").files[0];
+
+            set(ref(database, "users/" + userId), {
+              name: name,
+              class: userClass,
+              age: age,
+              email: email,
+              profilePhotoUrl: profilePhoto
+                ? URL.createObjectURL(profilePhoto)
+                : null,
+            })
+              .then(() => {
+                alert("Signup successful!");
+                document.getElementById("signup-form").reset();
+              })
+              .catch((error) => {
+                console.error("Error saving data to database: ", error);
+              });
+          })
+          .catch((error) => {
+            document.getElementById("error-message").innerText = error.message;
+          });
+      });
+    </script>
+  </body>
+</html>
